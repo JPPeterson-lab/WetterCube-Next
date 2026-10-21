@@ -168,13 +168,20 @@ static void screenshot() {
 static void einstellungen() {
   String h = "<h1>WetterCube <span>Next</span></h1><p class=\"s\">Version " FIRMWARE_VERSION " · " + WiFi.localIP().toString() +
              " · Fusion: " + (fusionAdresse.length() ? fusionAdresse : String("wird gesucht")) + "</p>"
-             "<form method=\"POST\" action=\"/speichern\"><div class=\"k\"><b>Anzeige</b>"
-             "<div class=\"s\" style=\"margin-top:8px\">Seiten (Antippen des Displays blättert weiter)</div>";
-  h += kreuz("s0", cfg.seiten & 1, "Temperatur und Biowetter");
-  h += kreuz("s1", cfg.seiten & 2, "Allergene und Vorhersage");
-  h += "<label>Automatisch weiterblättern (Sekunden, 0 = nur per Antippen)</label><input type=\"number\" name=\"wechsel\" min=\"0\" max=\"600\" value=\"" + String(cfg.wechsel_sek) + "\">"
-       "<label>Helligkeit am Tag (%)</label><input type=\"number\" name=\"hell\" min=\"3\" max=\"100\" value=\"" + String(cfg.helligkeit) + "\"></div>"
-       + nachtKarte() + raeumeAuswahl() +
+             "<form method=\"POST\" action=\"/speichern\">";
+  if (cfg.verwaltet) {
+    h += "<div class=\"k\"><b>Vom Fusion verwaltet</b><div class=\"s\" style=\"margin-top:8px\">Seiten, Räume, Helligkeit, Weiterblättern und Nachtmodus dieses Displays stellst du in der Oberfläche des Fusion ein: "
+         "<a href=\"http://" + (fusionAdresse.length() ? fusionAdresse : String("wettercube-next.local")) + "/next\">wettercube-next.local</a>, Reiter dieses Geräts. Dort lässt sich „Vom Fusion verwalten“ auch wieder ausschalten.</div></div>";
+  } else {
+    h += "<div class=\"k\"><b>Anzeige</b>"
+         "<div class=\"s\" style=\"margin-top:8px\">Seiten (Antippen des Displays blättert weiter)</div>";
+    h += kreuz("s0", cfg.seiten & 1, "Temperatur und Biowetter");
+    h += kreuz("s1", cfg.seiten & 2, "Allergene und Vorhersage");
+    h += "<label>Automatisch weiterblättern (Sekunden, 0 = nur per Antippen)</label><input type=\"number\" name=\"wechsel\" min=\"0\" max=\"600\" value=\"" + String(cfg.wechsel_sek) + "\">"
+         "<label>Helligkeit am Tag (%)</label><input type=\"number\" name=\"hell\" min=\"3\" max=\"100\" value=\"" + String(cfg.helligkeit) + "\"></div>"
+         + nachtKarte() + raeumeAuswahl();
+  }
+  h +=
        "<div class=\"k\"><b>Fusion</b><label>Adresse (leer = automatisch suchen)</label><input type=\"text\" name=\"fusion\" value=\"" + htmlEsc(cfg.fusion_host) + "\" placeholder=\"z. B. 192.168.178.101\"></div>"
        "<div class=\"k\"><b>Display (erst nach Neustart)</b><label>Controller</label><select name=\"panel\"><option value=\"0\"" + (cfg.panel == 0 ? " selected" : "") + ">ILI9341 (Ausführung mit ILI9341_2-Init, braucht Invertieren)</option>"
        "<option value=\"1\"" + (cfg.panel == 1 ? " selected" : "") + ">ST7789 (Vorgabe)</option></select>";
@@ -193,6 +200,7 @@ static void einstellungen() {
 static void speichern() {
   const int altPanel = cfg.panel; const bool altDrehen = cfg.drehen, altInvert = cfg.invert;
   const String altFusion = cfg.fusion_host;
+  if (!cfg.verwaltet) {                                      // Seiten, Raeume, Helligkeit und Nachtmodus: nur hier, solange sie nicht vom Fusion kommen
   cfg.seiten = (server.hasArg("s0") ? 1 : 0) | (server.hasArg("s1") ? 2 : 0);
   if (cfg.seiten == 0) cfg.seiten = 1;
   cfg.wechsel_sek = constrain(server.arg("wechsel").toInt(), 0, 600);
@@ -205,7 +213,7 @@ static void speichern() {
     cfg.nachtHell = constrain(server.arg("nhell").toInt(), 1, 100);
     cfg.nachtWach = constrain(server.arg("nwach").toInt(), 3, 120);
   }
-  cfg.fusion_host = server.arg("fusion"); cfg.fusion_host.trim();
+
   if (server.hasArg("raeume_form")) {
     String liste; int n = 0;
     for (int i = 0; i < 16 && n < 4; i++) {
@@ -214,10 +222,11 @@ static void speichern() {
     }
     cfg.raeume = liste;
   }
+  }
+  cfg.fusion_host = server.arg("fusion"); cfg.fusion_host.trim();
   cfg.panel = server.arg("panel").toInt() == 1 ? 1 : 0;
   cfg.drehen = server.hasArg("drehen"); cfg.invert = server.hasArg("invert");
-  speichereCfg();
-  cydHelligkeit(cfg.helligkeit);
+  speichereCfg();                                            // die Helligkeit uebernimmt der Takt der Anzeige (beachtet auch die Nacht)
   if (cfg.fusion_host != altFusion) { fusionAdresse = ""; fusionFehler = 0; }
   datenNeuAnfordern();
   if (cfg.panel != altPanel || cfg.drehen != altDrehen || cfg.invert != altInvert) { neustart("Gespeichert"); return; }
@@ -446,10 +455,10 @@ static bool zugriffErlaubt() {
 }
 
 void starteWebUI() {
-  if (mdns_init() == ESP_OK && mdns_hostname_set(MDNS_NAME) == ESP_OK) {
+  if (mdns_init() == ESP_OK && mdns_hostname_set(geraetName) == ESP_OK) {
     mdns_instance_name_set("WetterCube Next");
     mdns_service_add(nullptr, "_http", "_tcp", 80, nullptr, 0);
-    logDiag("[Start] mDNS: %s.local", MDNS_NAME);
+    logDiag("[Start] mDNS: %s.local", geraetName);
   }
   server.on("/", HTTP_GET, einstellungen);
   server.on("/speichern", HTTP_POST, speichern);

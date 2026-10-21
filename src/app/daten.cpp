@@ -9,6 +9,7 @@
 static String s_etag;
 static unsigned long s_tSuche = 0, s_tAbruf = 0;
 static bool s_neu = true;
+static bool s_seitenGeaendert = false;
 
 String bloeckeFuerSeiten() {
   String s;
@@ -38,12 +39,46 @@ static bool suchen() {
 
 static void kopieren(char* ziel, size_t n, const char* q) { strlcpy(ziel, q ? q : "", n); }
 
+static String urlKodiert(const String& s) {
+  String o; char b[4];
+  for (size_t i = 0; i < s.length(); i++) {
+    const char c = s[i];
+    if (isalnum((unsigned char)c) || c == '-' || c == '_' || c == '.' || c == ',') o += c;
+    else { snprintf(b, sizeof(b), "%%%02X", (unsigned char)c); o += b; }
+  }
+  return o;
+}
+
+// Einstellungen vom Fusion (Reiter dieses Geraets auf wettercube-next.local): nur wenn der Fusion dieses Geraet verwaltet
+static void cfgVomFusion(JsonObject c) {
+  const int seiten = constrain((int)(c["seiten"] | cfg.seiten), 1, 3);
+  const int wechsel = constrain((int)(c["wechsel"] | cfg.wechsel_sek), 0, 600);
+  const int hell = constrain((int)(c["hell"] | cfg.helligkeit), 3, 100);
+  const int nq = constrain((int)(c["nq"] | cfg.nachtQuelle), 0, 2);
+  const int nvon = constrain((int)(c["nvon"] | cfg.nachtVon), 0, 1439), nbis = constrain((int)(c["nbis"] | cfg.nachtBis), 0, 1439);
+  const int nverh = constrain((int)(c["nverh"] | cfg.nachtVerhalten), 0, 2);
+  const int nhell = constrain((int)(c["nhell"] | cfg.nachtHell), 1, 100), nwach = constrain((int)(c["nwach"] | cfg.nachtWach), 3, 120);
+  String r = c["r"] | "";
+  if (r.length() > 200) r = r.substring(0, 200);
+  const bool gleich = cfg.verwaltet && seiten == cfg.seiten && wechsel == cfg.wechsel_sek && hell == cfg.helligkeit && nq == cfg.nachtQuelle &&
+                      nvon == cfg.nachtVon && nbis == cfg.nachtBis && nverh == cfg.nachtVerhalten && nhell == cfg.nachtHell && nwach == cfg.nachtWach && r == cfg.raeume;
+  if (gleich) return;
+  if (seiten != cfg.seiten) s_seitenGeaendert = true;
+  cfg.verwaltet = true; cfg.seiten = seiten; cfg.wechsel_sek = wechsel; cfg.helligkeit = hell; cfg.nachtQuelle = nq; cfg.nachtVon = nvon; cfg.nachtBis = nbis;
+  cfg.nachtVerhalten = nverh; cfg.nachtHell = nhell; cfg.nachtWach = nwach; cfg.raeume = r;
+  speichereCfg();
+  logDiag("[Fusion] Einstellungen vom Fusion uebernommen");
+}
+
 static bool auswerten(const char* json) {
   JsonDocument doc;
   if (deserializeJson(doc, json) != DeserializationError::Ok) return false;
   NextDaten d = daten;                                   // bisherige Daten behalten, nur gelieferte Bloecke ersetzen
   kopieren(d.tz, sizeof(d.tz), doc["tz"] | "");
   d.nachtOk = doc["nacht"].is<bool>(); d.nacht = doc["nacht"] | false;
+  JsonObject cf = doc["cfg"];
+  if (!cf.isNull()) cfgVomFusion(cf);
+  else if (cfg.verwaltet) { cfg.verwaltet = false; speichereCfg(); logDiag("[Fusion] Der Fusion verwaltet dieses Geraet nicht mehr, die eigenen Einstellungen gelten wieder"); }
   JsonObject w = doc["wetter"];
   if (!w.isNull()) {
     d.wetterOk = true;
@@ -110,12 +145,16 @@ static bool auswerten(const char* json) {
   }
   daten = d;
   s_etag = String(doc["etag"] | "");
+  if (s_seitenGeaendert) { s_etag = ""; s_tAbruf = 0; }                    // andere Seiten: andere Datenbloecke holen
   if (d.tz[0] && s_neu) { setenv("TZ", d.tz, 1); tzset(); s_neu = false; }
   return true;
 }
 
 static bool abrufen() {
   String url = String("http://") + fusionAdresse + "/api/next?b=" + bloeckeFuerSeiten();
+  // Das Geraet meldet sich beim Fusion mit Kennung, Version und aktuellen Einstellungen (so legt der Fusion den Reiter an)
+  url += String("&id=") + geraetId + "&ip=" + WiFi.localIP().toString() + "&nv=" + FIRMWARE_VERSION + "&c=" + cfg.seiten + "," + cfg.wechsel_sek + "," + cfg.helligkeit + "," + cfg.nachtQuelle + "," +
+         cfg.nachtVon + "," + cfg.nachtBis + "," + cfg.nachtVerhalten + "," + cfg.nachtHell + "," + cfg.nachtWach + "&r=" + urlKodiert(cfg.raeume);
   if (s_etag.length()) url += String("&e=") + s_etag;
   HTTPClient http;
   if (!http.begin(url)) return false;
@@ -126,6 +165,7 @@ static bool abrufen() {
   String body = http.getString();
   if (!auswerten(body.c_str())) { logDiag("[Abruf] Antwort nicht lesbar"); return false; }
   datenStand = millis(); fusionFehler = 0;
+  if (s_seitenGeaendert) { s_seitenGeaendert = false; uiHauptseite(); }       // die Seitenauswahl hat sich geaendert: neu auf die erste Seite
   return true;
 }
 

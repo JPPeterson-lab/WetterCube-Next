@@ -8,7 +8,7 @@
 <p align="center"><strong>Das kleine Zusatzdisplay zur WetterCube Fusion: ein Display für jeden Raum</strong></p>
 
 ![Status](https://img.shields.io/badge/Status-Alpha-orange?style=flat-square)
-![Version](https://img.shields.io/badge/Version-v0.1.0--alpha11-blue?style=flat-square&cacheSeconds=1)
+![Version](https://img.shields.io/badge/Version-v0.2.0--alpha1-blue?style=flat-square&cacheSeconds=1)
 ![Hardware](https://img.shields.io/badge/Hardware-ESP32%20CYD%202.8%22-red?style=flat-square&logo=espressif&logoColor=white)
 ![Plattform](https://img.shields.io/badge/Platform-ESP--IDF%205.5-teal?style=flat-square&logo=espressif&logoColor=white)
 ![Lizenz](https://img.shields.io/badge/Lizenz-Apache%202.0-blue?style=flat-square)
@@ -30,7 +30,7 @@
 - **Seite 1, Temperatur und Biowetter:** Wettersymbol, Temperatur, Uhr, Tiefst- und Höchstwert, bis zu vier Sensorwerte aus dem Haus und die Biowetter-Kategorien deiner Fusion
 - **Seite 2, Allergene und Vorhersage:** deine Allergene mit der Belastung heute und die Vorhersage
 - **Antippen blättert weiter**, auf Wunsch automatisch; Nachtmodus mit Display aus, gedimmt oder als Nacht-Uhr
-- **Weboberfläche** unter `http://wettercube-next.local`, Updates auf Knopfdruck mit Rollback
+- **Einstellungen aller Next-Displays an einer Stelle** auf dem Fusion unter `http://wettercube-next.local` (ein Reiter je Next); Geräte-Einstellungen und Updates auf der eigenen Seite des Next (Updates auf Knopfdruck mit Rollback)
 
 <p align="center">
   <img src="assets/screens/next-temperatur-biowetter.png" width="260" alt="Seite 1: Temperatur und Biowetter">
@@ -42,7 +42,7 @@
 
 1. CYD per USB anschließen und den **[Web-Installer](https://jppeterson-lab.github.io/WetterCube-Next/)** in Chrome oder Edge öffnen (das löscht den Flash, auch fremde Software auf dem CYD).
 2. Mit dem WLAN **WetterCube-Next-Setup** verbinden (Passwort steht auf dem Display), das eigene WLAN eintragen, speichern.
-3. Fertig: Das Next sucht die Fusion und zeigt die Daten. Weitere Einstellungen unter `http://wettercube-next.local`.
+3. Fertig: Das Next sucht die Fusion und zeigt die Daten. Weitere Einstellungen auf dem Fusion unter `http://wettercube-next.local` (Reiter dieses Next).
 
 **Selbst bauen** mit ESP-IDF 5.5: `bash build.sh` (bauen), `bash build.sh flash /dev/cu.xxx` (flashen), beim ersten Mal auf einem CYD mit fremder Software `bash build.sh erstflash /dev/cu.xxx`. Einzelheiten im [Wiki](https://wiki.wettercube.de/index.php/Next/Entwicklung).
 
@@ -100,7 +100,7 @@ Du darfst den Quellcode nutzen, verändern und weitergeben, auch kommerziell; di
 - **Page 1, temperature and Biowetter:** weather icon, temperature, clock, min/max, up to four sensor values from the house and the Biowetter categories of your Fusion
 - **Page 2, allergens and forecast:** your allergens with today's level and the forecast
 - **Tapping turns the page**, optionally automatically; night mode with the display off or dimmed
-- **Web interface** at `http://wettercube-next.local`, updates on a button press with rollback
+- **Settings of all Next displays in one place** on the Fusion at `http://wettercube-next.local` (one tab per Next); device settings and updates on the Next's own page (updates on a button press with rollback)
 
 <p align="center">
   <img src="assets/screens/next-temperatur-biowetter.png" width="260" alt="Page 1: temperature and bio-weather">
@@ -112,7 +112,7 @@ Du darfst den Quellcode nutzen, verändern und weitergeben, auch kommerziell; di
 
 1. Connect the CYD via USB and open the **[web installer](https://jppeterson-lab.github.io/WetterCube-Next/)** in Chrome or Edge (this erases the flash, including any foreign software on the CYD).
 2. Connect to the Wi-Fi **WetterCube-Next-Setup** (password shown on the display), enter your own Wi-Fi, save.
-3. Done: Next looks for the Fusion and shows the data. More settings at `http://wettercube-next.local`.
+3. Done: Next looks for the Fusion and shows the data. More settings on the Fusion at `http://wettercube-next.local` (tab of this Next).
 
 **Build it yourself** with ESP-IDF 5.5: `bash build.sh` (build), `bash build.sh flash /dev/cu.xxx` (flash), the first time on a CYD with foreign software `bash build.sh erstflash /dev/cu.xxx`. Details in the [wiki](https://wiki.wettercube.de/index.php/Next/Entwicklung).
 

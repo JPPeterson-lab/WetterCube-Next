@@ -50,6 +50,7 @@ static void ereignis(void*, esp_event_base_t base, int32_t id, void* data) {
   }
 }
 
+extern char geraetName[40];   // app_state.cpp
 static bool initWlan() {
   if (s_init) return true;
   esp_netif_init();
@@ -57,7 +58,7 @@ static bool initWlan() {
   if (e != ESP_OK && e != ESP_ERR_INVALID_STATE) return false;
   s_sta = esp_netif_create_default_wifi_sta();
   s_ap = esp_netif_create_default_wifi_ap();
-  esp_netif_set_hostname(s_sta, MDNS_NAME);
+  esp_netif_set_hostname(s_sta, geraetName);
   wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
   if (esp_wifi_init(&cfg) != ESP_OK) return false;
   esp_wifi_set_storage(WIFI_STORAGE_RAM);

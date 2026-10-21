@@ -25,9 +25,12 @@ struct Config {
   int    nachtHell = 10;        // Helligkeit in der Nacht (Prozent)
   int    nachtWach = 15;        // Sekunden, die Antippen das Display nachts anschaltet
   bool   autoUpdate = false;    // automatisch (alle 6 Stunden) nach Updates suchen; Vorgabe aus, die Suche per Knopf geht immer
+  bool   verwaltet = false;     // Seiten, Raeume, Helligkeit und Nachtmodus kommen vom Fusion (Reiter auf wettercube-next.local), nicht von dieser Weboberflaeche
   bool   invert = false;        // Farben invertieren (ST7789: aus; die ILI9341_2-Ausfuehrung braucht es)
 };
 extern Config cfg;
+extern char geraetName[40];            // Netzname dieses Geraets: wettercube-next-<Ende der MAC-Adresse> (die Adresse wettercube-next.local gehoert dem Fusion)
+extern char geraetId[16];              // MAC-Adresse als 12 Hex-Zeichen: so erkennt der Fusion dieses Geraet
 void ladeCfg();
 void speichereCfg();
 
