@@ -1,6 +1,6 @@
 {
   "name": "WetterCube Next",
-  "version": "0.1.0-alpha10",
+  "version": "0.1.0-alpha11",
   "home_assistant_domain": "esphome",
   "funding_url": "https://github.com/JPPeterson-lab/WetterCube-Next",
   "new_install_prompt_erase": true,

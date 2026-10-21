@@ -2,7 +2,7 @@
 // Copyright 2026 Jan Althaus (JPPeterson-lab)
 #pragma once
 // Feste Einstellungen von WetterCube Next
-#define FIRMWARE_VERSION "0.1.0-alpha10"
+#define FIRMWARE_VERSION "0.1.0-alpha11"
 
 #define MDNS_NAME        "wettercube-next"      // http://wettercube-next.local (mit Anhang aus der MAC-Adresse, wenn mehrere im Netz sind)
 #define PORTAL_SSID      "WetterCube-Next-Setup"
