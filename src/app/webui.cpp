@@ -107,7 +107,7 @@ static String nachtKarte() {
   String h = "<div class=\"k\"><b>Nachtmodus</b><div class=\"s\" style=\"margin-top:6px\">Gerade: " + String(uiNachtAktiv() ? "Nacht" : "Tag") + "</div>"
              "<label>Wann ist Nacht?</label><select name=\"nq\">" + opt(0, cfg.nachtQuelle, "Nie (kein Nachtmodus)") + opt(1, cfg.nachtQuelle, "Wie die Fusion (nach deren Einstellungen)") + opt(2, cfg.nachtQuelle, "Eigene Zeiten") + "</select>"
              "<label>Eigene Zeiten: von / bis</label><div style=\"display:flex;gap:8px\">" + zeitFeld("nvon", cfg.nachtVon) + zeitFeld("nbis", cfg.nachtBis) + "</div>"
-             "<label>Was passiert nachts?</label><select name=\"nverh\">" + opt(0, cfg.nachtVerhalten, "Display aus (Antippen schaltet kurz an)") + opt(1, cfg.nachtVerhalten, "Dunkles Design, gedimmt") + "</select>"
+             "<label>Was passiert nachts?</label><select name=\"nverh\">" + opt(0, cfg.nachtVerhalten, "Display aus (Antippen schaltet kurz an)") + opt(1, cfg.nachtVerhalten, "Dunkles Design, gedimmt") + opt(2, cfg.nachtVerhalten, "Nacht-Uhr (Uhrzeit, Datum, Wetter, gedimmt)") + "</select>"
              "<label>Helligkeit nachts (%)</label><input type=\"number\" name=\"nhell\" min=\"1\" max=\"100\" value=\"" + String(cfg.nachtHell) + "\">"
              "<label>Antippen schaltet nachts an für (Sekunden)</label><input type=\"number\" name=\"nwach\" min=\"3\" max=\"120\" value=\"" + String(cfg.nachtWach) + "\">";
   if (cfg.nachtQuelle == 1 && !daten.nachtOk) h += "<p class=\"s\">Die Fusion liefert den Nachtmodus erst ab v0.9.9-alpha7.</p>";
@@ -201,7 +201,7 @@ static void speichern() {
     auto minuten = [](const String& s, int vorgabe) { int h, m; return sscanf(s.c_str(), "%d:%d", &h, &m) == 2 && h >= 0 && h < 24 && m >= 0 && m < 60 ? h * 60 + m : vorgabe; };
     cfg.nachtQuelle = constrain(server.arg("nq").toInt(), 0, 2);
     cfg.nachtVon = minuten(server.arg("nvon"), cfg.nachtVon); cfg.nachtBis = minuten(server.arg("nbis"), cfg.nachtBis);
-    cfg.nachtVerhalten = server.arg("nverh").toInt() == 1 ? 1 : 0;
+    cfg.nachtVerhalten = constrain(server.arg("nverh").toInt(), 0, 2);
     cfg.nachtHell = constrain(server.arg("nhell").toInt(), 1, 100);
     cfg.nachtWach = constrain(server.arg("nwach").toInt(), 3, 120);
   }

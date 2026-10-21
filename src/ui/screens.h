@@ -9,6 +9,7 @@ extern "C" {
 #endif
 
 typedef struct _objects_t {
+    lv_obj_t *screennachtuhr;
     lv_obj_t *screenpollenvor;
     lv_obj_t *screentempbio;
     lv_obj_t *screenboot;
@@ -73,16 +74,24 @@ typedef struct _objects_t {
     lv_obj_t *imagevor4;
     lv_obj_t *labelvor4zeit;
     lv_obj_t *labelvor4temp;
+    lv_obj_t *labelnachtzeit;
+    lv_obj_t *labelnachtdatum;
+    lv_obj_t *labelnachttemp;
+    lv_obj_t *imagenachtwetter;
 } objects_t;
 
 extern objects_t objects;
 
 enum ScreensEnum {
-    SCREEN_ID_SCREENPOLLENVOR = 1,
-    SCREEN_ID_SCREENTEMPBIO = 2,
-    SCREEN_ID_SCREENBOOT = 3,
+    SCREEN_ID_SCREENNACHTUHR = 1,
+    SCREEN_ID_SCREENPOLLENVOR = 2,
+    SCREEN_ID_SCREENTEMPBIO = 3,
+    SCREEN_ID_SCREENBOOT = 4,
 };
 
+void create_screen_screennachtuhr();
+void tick_screen_screennachtuhr();
+void delete_screen_screennachtuhr();
 void create_screen_screenpollenvor();
 void tick_screen_screenpollenvor();
 void delete_screen_screenpollenvor();

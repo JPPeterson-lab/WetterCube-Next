@@ -11,8 +11,10 @@ extern "C" {
 // Common colors
 extern const uint32_t common_000000;
 extern const uint32_t common_0fa64a;
+extern const uint32_t common_7b828c;
 extern const uint32_t common_7c93a6;
 extern const uint32_t common_87ceeb;
+extern const uint32_t common_a3aab4;
 extern const uint32_t common_ce4b11;
 extern const uint32_t common_e0f7ff;
 extern const uint32_t common_ffffff;

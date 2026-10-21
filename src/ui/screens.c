@@ -13,6 +13,70 @@
 objects_t objects;
 lv_obj_t *tick_value_change_obj;
 
+void create_screen_screennachtuhr() {
+    lv_obj_t *obj = lv_obj_create(0);
+    objects.screennachtuhr = obj;
+    lv_obj_set_pos(obj, 0, 0);
+    lv_obj_set_size(obj, 320, 240);
+        lv_obj_set_style_bg_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_bg_color(obj, lv_color_hex(common_000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    {
+        lv_obj_t *parent_obj = obj;
+        {
+            // labelnachtzeit
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            objects.labelnachtzeit = obj;
+            lv_obj_set_pos(obj, 0, 4);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_label_set_long_mode(obj, LV_LABEL_LONG_CLIP);
+            lv_obj_set_style_text_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_color(obj, lv_color_hex(common_a3aab4), LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_align(obj, 2, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_label_set_text(obj, "22:45");
+        }
+        {
+            // labelnachtdatum
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            objects.labelnachtdatum = obj;
+            lv_obj_set_pos(obj, 0, 130);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_label_set_long_mode(obj, LV_LABEL_LONG_CLIP);
+            lv_obj_set_style_text_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_color(obj, lv_color_hex(common_7b828c), LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_align(obj, 2, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_label_set_text(obj, "Mi. 21.10.2026");
+        }
+        {
+            // labelnachttemp
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            objects.labelnachttemp = obj;
+            lv_obj_set_pos(obj, 146, 176);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_label_set_long_mode(obj, LV_LABEL_LONG_CLIP);
+            lv_obj_set_style_text_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_color(obj, lv_color_hex(common_7b828c), LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_align(obj, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_label_set_text(obj, "20 °C");
+        }
+        {
+            // imagenachtwetter
+            lv_obj_t *obj = lv_img_create(parent_obj);
+            objects.imagenachtwetter = obj;
+            lv_obj_set_pos(obj, 70, 168);
+            lv_obj_set_size(obj, 64, 64);
+            // No image source configured
+            lv_img_set_size_mode(obj, LV_IMG_SIZE_MODE_REAL);
+            lv_img_set_antialias(obj, true);
+        }
+    }
+
+    tick_screen_screennachtuhr();
+}
+
+void tick_screen_screennachtuhr() {
+}
+
+
 void create_screen_screenpollenvor() {
     lv_obj_t *obj = lv_obj_create(0);
     objects.screenpollenvor = obj;
@@ -46,8 +110,8 @@ void create_screen_screenpollenvor() {
                     objects.labelpollentitel = obj;
                     lv_obj_set_pos(obj, 9, 5);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_obj_set_style_text_color(obj, lv_color_hex(common_ce4b11), LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_text_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_text_color(obj, lv_color_hex(common_ce4b11), LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_label_set_text(obj, "Pollen");
                 }
                 {
@@ -202,8 +266,8 @@ void create_screen_screenpollenvor() {
                     objects.labelvortitel = obj;
                     lv_obj_set_pos(obj, 9, 5);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_obj_set_style_text_color(obj, lv_color_hex(common_ce4b11), LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_text_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_text_color(obj, lv_color_hex(common_ce4b11), LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_label_set_text(obj, "Vorhersage");
                 }
                 {
@@ -348,8 +412,8 @@ void create_screen_screentempbio() {
             objects.labeltemp = obj;
             lv_obj_set_pos(obj, 82, 2);
             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-            lv_obj_set_style_text_color(obj, lv_color_hex(common_0fa64a), LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_obj_set_style_text_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_color(obj, lv_color_hex(common_0fa64a), LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_label_set_text(obj, "8 °C");
         }
         {
@@ -358,8 +422,8 @@ void create_screen_screentempbio() {
             objects.labelwettertext = obj;
             lv_obj_set_pos(obj, 82, 60);
             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-            lv_obj_set_style_text_color(obj, lv_color_hex(common_000000), LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_obj_set_style_text_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_color(obj, lv_color_hex(common_000000), LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_label_set_text(obj, "Regen, gefühlt 6 °C");
         }
         {
@@ -400,8 +464,8 @@ void create_screen_screentempbio() {
                     objects.labelsenstitel = obj;
                     lv_obj_set_pos(obj, 9, 5);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_obj_set_style_text_color(obj, lv_color_hex(common_ce4b11), LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_text_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_text_color(obj, lv_color_hex(common_ce4b11), LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_label_set_text(obj, "Räume");
                 }
                 {
@@ -492,8 +556,8 @@ void create_screen_screentempbio() {
                     objects.labelbiotitel = obj;
                     lv_obj_set_pos(obj, 9, 5);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_obj_set_style_text_color(obj, lv_color_hex(common_ce4b11), LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_text_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_text_color(obj, lv_color_hex(common_ce4b11), LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_label_set_text(obj, "Biowetter");
                 }
                 {
@@ -641,6 +705,7 @@ void tick_screen_screenboot() {
 
 typedef void (*tick_screen_func_t)();
 tick_screen_func_t tick_screen_funcs[] = {
+    tick_screen_screennachtuhr,
     tick_screen_screenpollenvor,
     tick_screen_screentempbio,
     tick_screen_screenboot,
@@ -650,6 +715,18 @@ void tick_screen(int screen_index) {
 }
 void tick_screen_by_id(enum ScreensEnum screenId) {
     tick_screen_funcs[screenId - 1]();
+}
+
+void delete_screen_screennachtuhr() {
+    if (objects.screennachtuhr != NULL) {
+        pp_anim_stop_timelines_for_deleted_tree(objects.screennachtuhr);
+        lv_obj_del(objects.screennachtuhr);
+    }
+    objects.screennachtuhr = 0;
+    objects.labelnachtzeit = 0;
+    objects.labelnachtdatum = 0;
+    objects.labelnachttemp = 0;
+    objects.imagenachtwetter = 0;
 }
 
 void delete_screen_screenpollenvor() {
@@ -740,6 +817,7 @@ void delete_screen_screenboot() {
 
 typedef void (*delete_screen_func_t)();
 delete_screen_func_t delete_screen_funcs[] = {
+    delete_screen_screennachtuhr,
     delete_screen_screenpollenvor,
     delete_screen_screentempbio,
     delete_screen_screenboot,
@@ -754,6 +832,7 @@ void create_screens() {
     lv_theme_t *theme = lv_theme_default_init(dispp, lv_palette_main(LV_PALETTE_BLUE), lv_palette_main(LV_PALETTE_RED), true, LV_FONT_DEFAULT);
     lv_disp_set_theme(dispp, theme);
 
+    create_screen_screennachtuhr();
     create_screen_screenpollenvor();
     create_screen_screentempbio();
     create_screen_screenboot();

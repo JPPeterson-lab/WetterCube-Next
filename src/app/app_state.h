@@ -21,7 +21,7 @@ struct Config {
   String raeume;                // Sensor-IDs der Fusion fuer die Kachel "Raeume" (Komma-Liste, bis 4); leer = die ersten vier
   int    nachtQuelle = 0;       // Nachtmodus: 0 = aus, 1 = wie die Fusion (nach deren Einstellungen), 2 = eigene Zeiten
   int    nachtVon = 22 * 60, nachtBis = 6 * 60 + 30;   // eigene Zeiten (Minuten seit Mitternacht)
-  int    nachtVerhalten = 0;    // 0 = Display aus (Antippen schaltet kurz an), 1 = dunkles Design, gedimmt
+  int    nachtVerhalten = 0;    // 0 = Display aus (Antippen schaltet kurz an), 1 = dunkles Design, gedimmt, 2 = Nacht-Uhr (grosse Uhr, Datum, Wetter; Antippen zeigt kurz die Seiten)
   int    nachtHell = 10;        // Helligkeit in der Nacht (Prozent)
   int    nachtWach = 15;        // Sekunden, die Antippen das Display nachts anschaltet
   bool   autoUpdate = false;    // automatisch (alle 6 Stunden) nach Updates suchen; Vorgabe aus, die Suche per Knopf geht immer

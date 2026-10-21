@@ -28,7 +28,7 @@ void ladeCfg() {
   cfg.web_pw = p.getString("webpw", "");
   cfg.nachtQuelle = p.getInt("nq", 0); if (cfg.nachtQuelle < 0 || cfg.nachtQuelle > 2) cfg.nachtQuelle = 0;
   cfg.nachtVon = p.getInt("nvon", 22 * 60); cfg.nachtBis = p.getInt("nbis", 6 * 60 + 30);
-  cfg.nachtVerhalten = p.getInt("nverh", 0) == 1 ? 1 : 0;
+  cfg.nachtVerhalten = p.getInt("nverh", 0); if (cfg.nachtVerhalten < 0 || cfg.nachtVerhalten > 2) cfg.nachtVerhalten = 0;
   cfg.nachtHell = p.getInt("nhell", 10); if (cfg.nachtHell < 1 || cfg.nachtHell > 100) cfg.nachtHell = 10;
   cfg.nachtWach = p.getInt("nwach", 15); if (cfg.nachtWach < 3 || cfg.nachtWach > 120) cfg.nachtWach = 15;
   p.end();

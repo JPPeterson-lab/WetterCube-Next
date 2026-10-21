@@ -9,12 +9,14 @@
 extern "C" const lv_font_t font_montserrat_18;
 extern "C" const lv_font_t font_montserrat_32;
 extern "C" const lv_font_t font_montserrat_22;     // aus src/fonts/ (PicoPixel exportiert nur die im Entwurf benutzten Groessen)
+extern "C" const lv_font_t font_montserrat_92_ziffern;   // nur 0-9 und ":" fuer die Nacht-Uhr (src/fonts/)
 
 #define F16 (&font_montserrat_16)
 #define F18 (&font_montserrat_18)
 #define F22 (&font_montserrat_22)
 #define F32 (&font_montserrat_32)
 #define F48 (&font_montserrat_48)
+#define F92 (&font_montserrat_92_ziffern)
 // Farben wie das helle WetterCube-Thema (Fusion): weisser Grund, schwarze Schrift, orange Ueberschriften, gruene Werte
 #define ORANGE   lv_color_hex(0xCE4B11)
 #define GRUEN    lv_color_hex(0x0FA64A)
@@ -429,13 +431,87 @@ static void designSetzen(bool dunkel) {
   s_dunkel = dunkel;
 }
 
+// ── Nacht-Uhr ────────────────────────────────────────────────────────────────
+// Nachtverhalten 2: schwarzer Screen mit grosser, gedimmter Uhr, Datum, Wettersymbol und Temperatur. Antippen zeigt fuer die Wachzeit die
+// normalen Seiten (dunkles Design), danach kommt die Uhr zurueck. Der Screen (ScreenNachtUhr) kommt aus PicoPixel, Schriften und Lage setzt der Code.
+static bool s_uhrBereit = false;
+static const int UHR_Y = 14, DATUM_Y = 104, WETTER_Y = 158, SYMBOL_PX = 64, LUECKE_PX = 14;
+static const uint32_t UHR_FARBE = 0xA3AAB4, UHR_NEBEN = 0x7B828C;   // gedimmtes Grau auf Schwarz
+
+static void nachtUhrEinrichten() {
+  if (s_uhrBereit || !objects.screennachtuhr) return;
+  s_uhrBereit = true;
+  lv_obj_set_style_bg_color(objects.screennachtuhr, lv_color_hex(0x000000), 0);
+  lv_obj_set_style_bg_opa(objects.screennachtuhr, LV_OPA_COVER, 0);
+  auto zeile = [](lv_obj_t* l, const lv_font_t* f, uint32_t farbe, int y) {
+    if (!l) return;
+    lv_label_set_long_mode(l, LV_LABEL_LONG_CLIP);
+    lv_obj_set_size(l, CYD_BREITE, LV_SIZE_CONTENT); lv_obj_set_pos(l, 0, y);
+    lv_obj_set_style_text_font(l, f, 0); lv_obj_set_style_text_color(l, lv_color_hex(farbe), 0);
+    lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
+  };
+  zeile(objects.labelnachtzeit,  F92, UHR_FARBE,  UHR_Y);
+  zeile(objects.labelnachtdatum, F22, UHR_NEBEN,  DATUM_Y);
+  if (objects.labelnachttemp) {
+    zeile(objects.labelnachttemp, F48, UHR_NEBEN, WETTER_Y);
+    lv_obj_set_width(objects.labelnachttemp, LV_SIZE_CONTENT);                // Breite folgt dem Text: Symbol und Temperatur stehen als Paar mittig
+    lv_obj_set_style_text_align(objects.labelnachttemp, LV_TEXT_ALIGN_LEFT, 0);
+  }
+  if (objects.imagenachtwetter) {
+    lv_img_set_size_mode(objects.imagenachtwetter, LV_IMG_SIZE_MODE_VIRTUAL);
+    lv_obj_set_size(objects.imagenachtwetter, SYMBOL_PX, SYMBOL_PX);
+    lv_obj_set_style_img_opa(objects.imagenachtwetter, LV_OPA_60, 0);         // gedimmt wie die Schrift
+  }
+  lv_obj_add_flag(objects.screennachtuhr, LV_OBJ_FLAG_CLICKABLE);
+  lv_obj_add_event_cb(objects.screennachtuhr, [](lv_event_t*) { nachtKlick(); }, LV_EVENT_CLICKED, nullptr);
+}
+
+static void nachtUhrAktualisieren() {
+  nachtUhrEinrichten();
+  if (!objects.screennachtuhr) return;
+  struct tm ti; char b[32];
+  if (getLocalTime(&ti, 0)) {
+    static const char* wt[] = {"So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"};
+    snprintf(b, sizeof(b), "%02d:%02d", ti.tm_hour, ti.tm_min); setText(objects.labelnachtzeit, b);
+    snprintf(b, sizeof(b), "%s. %02d.%02d.%04d", wt[ti.tm_wday], ti.tm_mday, ti.tm_mon + 1, ti.tm_year + 1900); setText(objects.labelnachtdatum, b);
+  } else { setText(objects.labelnachtzeit, "--:--"); setText(objects.labelnachtdatum, ""); }
+  const NextDaten& d = daten;
+  if (d.wetterOk) zahl(b, sizeof(b), d.temp, 0, " °C"); else snprintf(b, sizeof(b), "-- °C");
+  setText(objects.labelnachttemp, b);
+  lv_obj_update_layout(objects.labelnachttemp);
+  const int tw = lv_obj_get_width(objects.labelnachttemp), th = lv_obj_get_height(objects.labelnachttemp);
+  const int x0 = (CYD_BREITE - (SYMBOL_PX + LUECKE_PX + tw)) / 2;
+  lv_obj_set_pos(objects.labelnachttemp, x0 + SYMBOL_PX + LUECKE_PX, WETTER_Y + (SYMBOL_PX - th) / 2);
+  if (objects.imagenachtwetter) {
+    lv_obj_set_pos(objects.imagenachtwetter, x0, WETTER_Y);
+    if (d.wetterOk) {
+      const lv_img_dsc_t* ic = wmoZuImage(d.wmo, d.tag, false);
+      if (ic && lv_img_get_src(objects.imagenachtwetter) != ic) lv_img_set_src(objects.imagenachtwetter, ic);
+      lv_obj_clear_flag(objects.imagenachtwetter, LV_OBJ_FLAG_HIDDEN);
+    } else lv_obj_add_flag(objects.imagenachtwetter, LV_OBJ_FLAG_HIDDEN);
+  }
+}
+
+static bool nachtUhrAktiv() { return objects.screennachtuhr && lv_scr_act() == objects.screennachtuhr; }
+
 static void licht(int prozent) { if (prozent != s_licht) { s_licht = prozent; cydHelligkeit(prozent); } }
 
 // Zustand herstellen (bei jedem Tick und nach einem Antippen)
 static void nachtAnwenden() {
   const bool wach = millis() < s_wachBis;
-  if (!s_nacht) { if (s_dunkel) { designSetzen(false); uiAktualisieren(); } licht(cfg.helligkeit); return; }
-  if (cfg.nachtVerhalten == 1 || wach) {            // dunkel und gedimmt (oder kurz wach)
+  if (!s_nacht) {
+    if (nachtUhrAktiv()) { seiteZeigen(s_seite < 0 ? SEITE_TEMP_BIO : s_seite); uiAktualisieren(); }   // Tag: Uhr weg, zurueck auf die Seiten
+    if (s_dunkel) { designSetzen(false); uiAktualisieren(); }
+    licht(cfg.helligkeit); return;
+  }
+  if (cfg.nachtVerhalten == 2 && !wach) {           // Nacht-Uhr
+    nachtUhrAktualisieren();
+    if (!nachtUhrAktiv()) lv_scr_load(objects.screennachtuhr);
+    licht(cfg.nachtHell);
+    return;
+  }
+  if (nachtUhrAktiv()) { seiteZeigen(s_seite < 0 ? SEITE_TEMP_BIO : s_seite); uiAktualisieren(); }      // kurz wach: die Seiten zeigen
+  if (cfg.nachtVerhalten >= 1 || wach) {            // dunkel und gedimmt (oder kurz wach)
     if (!s_dunkel) { designSetzen(true); uiAktualisieren(); }
     licht(cfg.nachtHell);
   } else {                                          // Display aus
@@ -444,7 +520,7 @@ static void nachtAnwenden() {
 }
 
 static void nachtKlick() {
-  if (s_nacht && cfg.nachtVerhalten == 0 && millis() >= s_wachBis) {   // aus: das Antippen weckt nur, es blaettert nicht
+  if (s_nacht && cfg.nachtVerhalten != 1 && millis() >= s_wachBis) {   // aus oder Nacht-Uhr: das Antippen weckt nur, es blaettert nicht
     s_wachBis = millis() + (unsigned long)cfg.nachtWach * 1000UL;
     nachtAnwenden();
     return;
@@ -474,5 +550,6 @@ void uiTick() {
   const bool aus = s_nacht && s_licht == 0;
   // automatisch weiterblaettern
   if (aus) return;
+  if (nachtUhrAktiv()) return;                      // die Nacht-Uhr wird nicht weitergeblaettert
   if (cfg.wechsel_sek > 0 && millis() - s_tSeite >= (unsigned long)cfg.wechsel_sek * 1000UL) { int n = naechsteSeite(s_seite); if (n != s_seite) { seiteZeigen(n); uiAktualisieren(); } else s_tSeite = millis(); }
 }

@@ -8,7 +8,7 @@
 <p align="center"><strong>Das kleine Zusatzdisplay zur WetterCube Fusion: ein Display für jeden Raum</strong></p>
 
 ![Status](https://img.shields.io/badge/Status-Alpha-orange?style=flat-square)
-![Version](https://img.shields.io/badge/Version-v0.1.0--alpha9-blue?style=flat-square&cacheSeconds=1)
+![Version](https://img.shields.io/badge/Version-v0.1.0--alpha10-blue?style=flat-square&cacheSeconds=1)
 ![Hardware](https://img.shields.io/badge/Hardware-ESP32%20CYD%202.8%22-red?style=flat-square&logo=espressif&logoColor=white)
 ![Plattform](https://img.shields.io/badge/Platform-ESP--IDF%205.5-teal?style=flat-square&logo=espressif&logoColor=white)
 ![Lizenz](https://img.shields.io/badge/Lizenz-Apache%202.0-blue?style=flat-square)
@@ -29,7 +29,7 @@
 
 - **Seite 1, Temperatur und Biowetter:** Wettersymbol, Temperatur, Uhr, Tiefst- und Höchstwert, bis zu vier Sensorwerte aus dem Haus und die Biowetter-Kategorien deiner Fusion
 - **Seite 2, Allergene und Vorhersage:** deine Allergene mit der Belastung heute und die Vorhersage
-- **Antippen blättert weiter**, auf Wunsch automatisch; Nachtmodus mit Display aus oder gedimmt
+- **Antippen blättert weiter**, auf Wunsch automatisch; Nachtmodus mit Display aus, gedimmt oder als Nacht-Uhr
 - **Weboberfläche** unter `http://wettercube-next.local`, Updates auf Knopfdruck mit Rollback
 
 <p align="center">
