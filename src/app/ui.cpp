@@ -72,6 +72,9 @@ static lv_obj_t** vorTemp[4];
 static lv_obj_t** vorBild[4];
 
 // ── Aufbau ───────────────────────────────────────────────────────────────────
+static lv_obj_t* s_startQuelle = nullptr;                    // Datenquellen unten im Startbild
+static lv_coord_t s_statusX = 0, s_statusY = 0, s_statusB = 0, s_statusH = 0;   // urspruengliche Lage der Statuszeile (ein- bis zweizeilig)
+static lv_label_long_mode_t s_statusModus = LV_LABEL_LONG_WRAP;
 static void startbildAusrichten() {
   // Nur die Ausrichtung angepasst: "WetterCube" + "Next" als Paar mittig (Schrift 32, damit es in 320 px passt)
   lv_point_t a, b;
@@ -92,6 +95,10 @@ static void startbildAusrichten() {
   lv_obj_set_style_text_font(q, F16, 0);
   lv_obj_set_style_text_color(q, GRAU, 0);
   lv_label_set_text(q, "Wetterdaten: Open-Meteo.com, DWD");
+  s_startQuelle = q;
+  s_statusX = lv_obj_get_x(objects.labelstatus); s_statusY = lv_obj_get_y(objects.labelstatus);
+  s_statusB = lv_obj_get_width(objects.labelstatus); s_statusH = lv_obj_get_height(objects.labelstatus);
+  s_statusModus = lv_label_get_long_mode(objects.labelstatus);
 }
 
 static void seitenAufbauen() {
@@ -338,6 +345,23 @@ void uiHinweis(const char* titel, const char* text) {
   if (text && text[0]) snprintf(b, sizeof(b), "%s\n%s", titel, text); else snprintf(b, sizeof(b), "%s", titel);
   setText(objects.labelstatus, b);
   lv_obj_set_style_text_align(objects.labelstatus, LV_TEXT_ALIGN_CENTER, 0);
+  // Mehrzeilige Hinweise (Einrichtung mit WLAN-Name und Passwort): den ganzen Platz unter dem Namen nutzen, Balken und Quellenzeile ausblenden,
+  // sonst schneidet die feste Hoehe der Statuszeile alles nach der zweiten Zeile ab (das Passwort waere nicht zu lesen)
+  const bool lang = text && strchr(text, '\n') != nullptr;
+  if (lang) {
+    lv_label_set_long_mode(objects.labelstatus, LV_LABEL_LONG_WRAP);
+    lv_obj_set_width(objects.labelstatus, CYD_BREITE - 20);
+    lv_obj_set_height(objects.labelstatus, LV_SIZE_CONTENT);
+    lv_obj_set_pos(objects.labelstatus, 10, 108);
+    if (objects.barwifi) lv_obj_add_flag(objects.barwifi, LV_OBJ_FLAG_HIDDEN);
+    if (s_startQuelle) lv_obj_add_flag(s_startQuelle, LV_OBJ_FLAG_HIDDEN);
+  } else if (s_statusB > 0) {
+    lv_label_set_long_mode(objects.labelstatus, s_statusModus);
+    lv_obj_set_size(objects.labelstatus, s_statusB, s_statusH);
+    lv_obj_set_pos(objects.labelstatus, s_statusX, s_statusY);
+    if (objects.barwifi) lv_obj_clear_flag(objects.barwifi, LV_OBJ_FLAG_HIDDEN);
+    if (s_startQuelle) lv_obj_clear_flag(s_startQuelle, LV_OBJ_FLAG_HIDDEN);
+  }
   if (s_seite >= 0) { s_seite = -1; loadScreen(SCREEN_ID_SCREENBOOT); }
 }
 
