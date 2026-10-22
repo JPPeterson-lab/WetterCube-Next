@@ -65,7 +65,7 @@
 
 > 💙 **Danke an PicoPixel:** Die LVGL-UI des Next wird mit [PicoPixel](https://picopixel.io/de/) erstellt, einem kostenlosen, browserbasierten Drag-and-Drop-Editor für LVGL. Das ist kein Werbe- und kein Affiliate-Link, ich verdiene nichts daran.
 
-Bibliotheken, Icons und Schriften von Dritten behalten ihre eigenen Lizenzen, Einzelheiten in [CREDITS.md](CREDITS.md). Die Daten stammen von der Fusion (Open-Meteo, CC BY 4.0, kostenlos nur für **nicht-kommerzielle Nutzung**; DWD Opendata).
+Bibliotheken, Icons und Schriften von Dritten behalten ihre eigenen Lizenzen, Einzelheiten in [CREDITS.md](CREDITS.md). Die Daten stammen von der Fusion (Open-Meteo, CC BY 4.0, kostenlos nur für **nicht-kommerzielle Nutzung**; [DWD Opendata](https://opendata.dwd.de), CC BY 4.0, „Quelle: Deutscher Wetterdienst“).
 
 | Was | Lizenz | Datei |
 |---|---|---|
@@ -135,7 +135,7 @@ Du darfst den Quellcode nutzen, verändern und weitergeben, auch kommerziell; di
 
 > 💙 **Thanks to PicoPixel:** The LVGL UI of the Next is created with [PicoPixel](https://picopixel.io/), a free, browser-based drag-and-drop editor for LVGL. This is not an advertisement or affiliate link, I earn nothing from it.
 
-Libraries, icons and fonts by third parties keep their own licences, details in [CREDITS.md](CREDITS.md). The data comes from the Fusion (Open-Meteo, CC BY 4.0, free for **non-commercial use only**; DWD Opendata).
+Libraries, icons and fonts by third parties keep their own licences, details in [CREDITS.md](CREDITS.md). The data comes from the Fusion (Open-Meteo, CC BY 4.0, free for **non-commercial use only**; [DWD Opendata](https://opendata.dwd.de), CC BY 4.0, “Quelle: Deutscher Wetterdienst”).
 
 | What | Licence | File |
 |---|---|---|
