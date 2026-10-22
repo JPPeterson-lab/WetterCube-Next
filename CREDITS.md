@@ -1,4 +1,18 @@
-# Credits
+# Credits & third-party licences / Credits
+
+> **English summary.** This project uses third-party resources. The sections below are in German; licence texts are quoted in their original language. In short:
+>
+> - **Weather data / Wetterdaten:** "Weather data by [Open-Meteo.com](https://open-meteo.com)", licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) ([open-meteo.com/en/licence](https://open-meteo.com/en/licence)). Values are partly converted and summarised in the WetterCube (for example pollen levels and daily maxima). The free API is for **non-commercial use only**; commercial use needs a licence from Open-Meteo.
+> - **Location search:** Location data by [GeoNames](https://www.geonames.org) via Open-Meteo (CC BY 4.0).
+> - **Pollen and air quality:** "Contains modified Copernicus Atmosphere Monitoring Service information", provided via Open-Meteo. Neither the European Commission nor ECMWF is responsible for any use of the data.
+> - **German Weather Service (DWD):** Warnings, pollen forecast, bio-weather and warning map from [DWD Opendata](https://opendata.dwd.de), licence CC BY 4.0, credited as "Quelle: Deutscher Wetterdienst" next to the displayed data.
+> - **Weather icons:** [Meteocons](https://github.com/basmilius/weather-icons) by Bas Milius (MIT).
+> - **Font:** [Montserrat](https://github.com/JulietaUla/Montserrat) (SIL OFL 1.1).
+> - **Libraries:** ESP-IDF, esp_lcd_ili9341 and mDNS by Espressif (Apache 2.0), LVGL 8 (MIT), ArduinoJson (MIT).
+> - **UI design:** [PicoPixel](https://picopixel.io)
+> - The weather data itself is delivered by the Fusion; the Next shows it with the credits above.
+>
+> **Project licence:** source code Apache License 2.0 ([LICENSE](LICENSE), [NOTICE](NOTICE)); texts, images and documentation CC BY-NC 4.0 ([LICENSE-Dokumentation.txt](LICENSE-Dokumentation.txt)). Third-party resources keep their own licences.
 
 | Bestandteil | Verwendung | Lizenz |
 |---|---|---|
