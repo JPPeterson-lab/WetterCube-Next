@@ -17,6 +17,7 @@ typedef struct _objects_t {
     lv_obj_t *labelcube;
     lv_obj_t *labelstatus;
     lv_obj_t *barwifi;
+    lv_obj_t *labelquellestart;
     lv_obj_t *imagewetter;
     lv_obj_t *labeltemp;
     lv_obj_t *labelwettertext;
@@ -60,6 +61,7 @@ typedef struct _objects_t {
     lv_obj_t *labelpollen7wert;
     lv_obj_t *labelpollen8name;
     lv_obj_t *labelpollen8wert;
+    lv_obj_t *labelquellepollen;
     lv_obj_t *kachelvor;
     lv_obj_t *labelvortitel;
     lv_obj_t *imagevor1;

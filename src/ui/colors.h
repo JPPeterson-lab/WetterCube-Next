@@ -12,6 +12,7 @@ extern "C" {
 extern const uint32_t common_000000;
 extern const uint32_t common_0fa64a;
 extern const uint32_t common_7b828c;
+extern const uint32_t common_7b8794;
 extern const uint32_t common_7c93a6;
 extern const uint32_t common_87ceeb;
 extern const uint32_t common_a3aab4;

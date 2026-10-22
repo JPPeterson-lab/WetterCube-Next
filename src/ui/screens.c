@@ -242,6 +242,17 @@ void create_screen_screenpollenvor() {
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
                     lv_label_set_text(obj, "keine");
                 }
+                {
+                    // labelquellepollen
+                    lv_obj_t *obj = lv_label_create(parent_obj);
+                    objects.labelquellepollen = obj;
+                    lv_obj_set_pos(obj, 6, 176);
+                    lv_obj_set_size(obj, 146, 40);
+                    lv_obj_set_style_text_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_text_color(obj, lv_color_hex(common_7b8794), LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_text_align(obj, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_label_set_text(obj, "Quelle: Deutscher Wetterdienst");
+                }
             }
         }
         {
@@ -693,6 +704,17 @@ void create_screen_screenboot() {
             lv_obj_set_style_radius(obj, 0, LV_PART_INDICATOR | LV_STATE_DEFAULT);
             lv_obj_set_style_bg_opa(obj, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
         }
+        {
+            // labelquellestart
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            objects.labelquellestart = obj;
+            lv_obj_set_pos(obj, 10, 190);
+            lv_obj_set_size(obj, 300, 40);
+            lv_obj_set_style_text_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_color(obj, lv_color_hex(common_7b8794), LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_align(obj, 2, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_label_set_text(obj, "Weather data by Open-Meteo.com\nQuelle: Deutscher Wetterdienst");
+        }
     }
 
     tick_screen_screenboot();
@@ -753,6 +775,7 @@ void delete_screen_screenpollenvor() {
     objects.labelpollen7wert = 0;
     objects.labelpollen8name = 0;
     objects.labelpollen8wert = 0;
+    objects.labelquellepollen = 0;
     objects.kachelvor = 0;
     objects.labelvortitel = 0;
     objects.imagevor1 = 0;
@@ -812,6 +835,7 @@ void delete_screen_screenboot() {
     objects.labelcube = 0;
     objects.labelstatus = 0;
     objects.barwifi = 0;
+    objects.labelquellestart = 0;
 }
 
 

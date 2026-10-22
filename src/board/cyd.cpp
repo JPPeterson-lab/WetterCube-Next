@@ -9,7 +9,9 @@
 #include "esp_lcd_panel_ops.h"
 #include "esp_lcd_ili9341.h"
 #include "esp_log.h"
+#include "esp_rom_sys.h"
 
+extern "C++" void logDiag(const char* fmt, ...);   // app_state.cpp (Eintrag im /log)
 static const char* TAG = "cyd";
 #define PIN_MOSI 13
 #define PIN_MISO 12
@@ -18,6 +20,10 @@ static const char* TAG = "cyd";
 #define PIN_DC    2
 #define PIN_BL   21
 #define PIN_T_IRQ 36
+#define PIN_T_CLK 25
+#define PIN_T_MOSI 32
+#define PIN_T_MISO 39
+#define PIN_T_CS 33
 
 static void hintergrundInit() {
   ledc_timer_config_t t = {};
@@ -35,10 +41,38 @@ void cydHelligkeit(int prozent) {
   ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_1);
 }
 
+// Touch-Controller XPT2046 (eigener Bus, hier von Hand getaktet): Nach dem Einschalten meldet bei manchen CYD-Ausfuehrungen der Interrupt-Pin
+// erst dann Beruehrungen, wenn der Controller einmal einen Befehl bekommen hat (Strom-Aus-Modus mit aktivem Pen-Interrupt). Deshalb wird
+// beim Start eine Messung angestossen. Als zweite Quelle dient der Druck (Z), falls die Ruhewerte plausibel sind.
+static bool s_zOk = false;
+static uint16_t xptLesen(uint8_t befehl) {
+  gpio_set_level((gpio_num_t)PIN_T_CS, 0); esp_rom_delay_us(2);
+  for (int i = 7; i >= 0; i--) { gpio_set_level((gpio_num_t)PIN_T_MOSI, (befehl >> i) & 1); gpio_set_level((gpio_num_t)PIN_T_CLK, 1); esp_rom_delay_us(2); gpio_set_level((gpio_num_t)PIN_T_CLK, 0); esp_rom_delay_us(2); }
+  uint16_t v = 0;
+  for (int i = 0; i < 16; i++) { gpio_set_level((gpio_num_t)PIN_T_CLK, 1); esp_rom_delay_us(2); gpio_set_level((gpio_num_t)PIN_T_CLK, 0); esp_rom_delay_us(2); v = (v << 1) | gpio_get_level((gpio_num_t)PIN_T_MISO); }
+  gpio_set_level((gpio_num_t)PIN_T_CS, 1);
+  return (v >> 3) & 0x0FFF;
+}
+static void touchInit() {
+  gpio_config_t o = {}; o.pin_bit_mask = (1ULL << PIN_T_CLK) | (1ULL << PIN_T_MOSI) | (1ULL << PIN_T_CS); o.mode = GPIO_MODE_OUTPUT; gpio_config(&o);
+  gpio_config_t i = {}; i.pin_bit_mask = (1ULL << PIN_T_MISO) | (1ULL << PIN_T_IRQ); i.mode = GPIO_MODE_INPUT; gpio_config(&i);
+  gpio_set_level((gpio_num_t)PIN_T_CS, 1); gpio_set_level((gpio_num_t)PIN_T_CLK, 0);
+  xptLesen(0x90);                                             // Messung anstossen: danach ist der Pen-Interrupt aktiv
+  const uint16_t z1 = xptLesen(0xB0), z2 = xptLesen(0xC0);
+  s_zOk = z1 < 200 && z2 > 3800;                              // Ruhewerte (kein Finger): z1 nahe 0, z2 nahe 4095
+  ESP_LOGI(TAG, "Touch XPT2046: Ruhewerte z1=%u z2=%u, Druckmessung %s", z1, z2, s_zOk ? "an" : "aus");
+}
+
 bool cydBerueht() {
-  static bool bereit = false;
-  if (!bereit) { gpio_config_t g = {}; g.pin_bit_mask = 1ULL << PIN_T_IRQ; g.mode = GPIO_MODE_INPUT; gpio_config(&g); bereit = true; }
-  return gpio_get_level((gpio_num_t)PIN_T_IRQ) == 0;      // der XPT2046 zieht den Pin bei Beruehrung nach unten
+  static bool bereit = false, war = false; static int zaehler = 0;
+  if (!bereit) { touchInit(); bereit = true; }
+  const int irq = gpio_get_level((gpio_num_t)PIN_T_IRQ);        // der XPT2046 zieht den Pin bei Beruehrung nach unten
+  int z = 0;
+  bool jetzt = irq == 0;
+  if (!jetzt && s_zOk) { z = (int)xptLesen(0xB0) + 4095 - (int)xptLesen(0xC0); jetzt = z > 900; }
+  if (jetzt != war && zaehler < 40) { zaehler++; ESP_LOGI(TAG, "Touch %s (Pen-Interrupt %d, Druck %d)", jetzt ? "gedrueckt" : "losgelassen", irq, z); logDiag("[Touch] %s (Pen-Interrupt %d, Druck %d)", jetzt ? "gedrueckt" : "losgelassen", irq, z); }
+  war = jetzt;
+  return jetzt;
 }
 
 // Initialisierung "ILI9341_2" aus TFT_eSPI: so laeuft der CYD (ESP32-2432S028R) im Projekt DeskRadar Pro (BGR, Inversion an, Rotation 1).

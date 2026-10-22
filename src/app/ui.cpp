@@ -86,16 +86,9 @@ static void startbildAusrichten() {
   lv_obj_set_pos(objects.labelwetter, x0, 60);
   lv_obj_set_pos(objects.labelcube, x0 + a.x + luecke, 60);
   lv_obj_set_style_text_align(objects.labelstatus, LV_TEXT_ALIGN_CENTER, 0);
-  // Datenquellen (Namensnennung) unten im Startbild
-  lv_obj_t* q = lv_label_create(objects.screenboot);
-  lv_obj_set_width(q, CYD_BREITE - 20);
-  lv_obj_set_pos(q, 10, 196);
-  lv_label_set_long_mode(q, LV_LABEL_LONG_WRAP);
-  lv_obj_set_style_text_align(q, LV_TEXT_ALIGN_CENTER, 0);
-  lv_obj_set_style_text_font(q, F16, 0);
-  lv_obj_set_style_text_color(q, GRAU, 0);
-  lv_label_set_text(q, "Wetterdaten: Open-Meteo.com, DWD");
-  s_startQuelle = q;
+  // Datenquellen (Namensnennung) unten im Startbild: das Label kommt aus PicoPixel (Text, Lage und Farbe dort), hier nur die Schrift
+  s_startQuelle = objects.labelquellestart;
+  if (s_startQuelle) lv_obj_set_style_text_font(s_startQuelle, F16, 0);
   s_statusX = lv_obj_get_x(objects.labelstatus); s_statusY = lv_obj_get_y(objects.labelstatus);
   s_statusB = lv_obj_get_width(objects.labelstatus); s_statusH = lv_obj_get_height(objects.labelstatus);
   s_statusModus = lv_label_get_long_mode(objects.labelstatus);
@@ -269,17 +262,13 @@ static void seitePollenVor() {
       setText(nm, "keine Daten"); setText(w, ""); lv_obj_clear_flag(nm, LV_OBJ_FLAG_HIDDEN);
     } else { lv_obj_add_flag(nm, LV_OBJ_FLAG_HIDDEN); lv_obj_add_flag(w, LV_OBJ_FLAG_HIDDEN); }
   }
-  // Namensnennung der Datenquellen: nur wenn in der Pollenkarte Platz ist (hoechstens 5 Allergene gewaehlt)
+  // Namensnennung der Datenquellen: nur wenn in der Pollenkarte Platz ist (hoechstens 5 Allergene gewaehlt); das Label kommt aus PicoPixel
   static lv_obj_t* quelle = nullptr;
   if (!quelle) {
-    quelle = lv_label_create(objects.screenpollenvor);
-    lv_obj_set_pos(quelle, 14, 186);
-    lv_obj_set_width(quelle, 146);
-    lv_label_set_long_mode(quelle, LV_LABEL_LONG_WRAP);
-    lv_obj_set_style_text_font(quelle, F16, 0);
-    lv_obj_set_style_text_color(quelle, GRAU, 0);
-    lv_label_set_text(quelle, "Open-Meteo.com, DWD");
+    quelle = objects.labelquellepollen;
+    if (quelle) lv_obj_set_style_text_font(quelle, F16, 0);
   }
+  if (!quelle) { /* kein Label im Entwurf */ } else
   if (n > 5) lv_obj_add_flag(quelle, LV_OBJ_FLAG_HIDDEN); else lv_obj_clear_flag(quelle, LV_OBJ_FLAG_HIDDEN);
   setText(objects.labelvortitel, "Vorhersage");
   for (int i = 0; i < 4; i++) {
