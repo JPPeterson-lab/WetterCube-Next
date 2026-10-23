@@ -50,7 +50,7 @@
 
 | Wo | Was |
 |---|---|
-| **[wettercube.de](https://wettercube.de/produkte/wettercube-next/)** | Überblick, [Vergleich der Cubes](https://wettercube.de/vergleich/), [Roadmap](https://wettercube.de/roadmap/), [Bauanleitung](https://wettercube.de/bauanleitung/) |
+| **[wettercube.de](https://wettercube.de/projekte/wettercube-next/)** | Überblick, [Vergleich der Cubes](https://wettercube.de/vergleich/), [Roadmap](https://wettercube.de/roadmap/), [Bauanleitung](https://wettercube.de/bauanleitung/) |
 | **[Wiki](https://wiki.wettercube.de/index.php/Next/Start)** | Inbetriebnahme, Anbindung an die Fusion, Einstellungen, Updates, Fehlersuche, Entwicklung |
 | **[Änderungsverlauf](CHANGELOG.md)** | was in welcher Version neu ist |
 
