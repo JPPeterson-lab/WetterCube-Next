@@ -103,6 +103,7 @@ lv_color_t pollenFarbe(float stufe);
 const char* pollenText(float stufe);
 const char* bioText(int wert);
 lv_color_t bioFarbe(int wert);
+lv_color_t tempFarbe(float temp, bool dunkel);   // wie beim Fusion: blau, gruen, gelb, rot
 // Web-Oberflaeche (webui.cpp)
 void starteWebUI();
 void starteWlanPortal();

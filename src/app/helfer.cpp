@@ -55,4 +55,12 @@ const char* pollenText(float s) {
 }
 // Biowetter: 0 kein Einfluss, 1 positiv, 2 gering, 3 hoch
 const char* bioText(int w) { return w == 0 ? "kein" : w == 1 ? "gut" : w == 2 ? "leicht" : "stark"; }
+// Temperaturfarbe wie beim Fusion: unter 8 Grad blau, unter 15 gruen, unter 24 gelb, darueber rot (helles bzw. dunkles Design)
+lv_color_t tempFarbe(float t, bool dunkel) {
+  if (t < 8)  return lv_color_hex(dunkel ? 0x3FA0FF : 0x0A5CE0);
+  if (t < 15) return lv_color_hex(dunkel ? 0x1FD46A : 0x00A040);
+  if (t < 24) return lv_color_hex(dunkel ? 0xFFC41A : 0xEE9B00);
+  return lv_color_hex(dunkel ? 0xFF4A2E : 0xE01E0A);
+}
+
 lv_color_t bioFarbe(int w) { return lv_color_hex(w == 0 ? 0x9CA3AF : w == 1 ? 0x22C55E : w == 2 ? 0xEAB308 : 0xDC2626); }

@@ -69,6 +69,7 @@ static void zeileAnpassen(lv_obj_t* name, lv_obj_t* wert, const char* text, int 
 static Zeile zSens[4], zBio[4], zPollen[8];
 static lv_obj_t** vorZeit[4];
 static lv_obj_t** vorTemp[4];
+static bool s_dunkel = false;   // dunkles Design (Nacht) aktiv
 static lv_obj_t** vorBild[4];
 
 // ── Aufbau ───────────────────────────────────────────────────────────────────
@@ -178,6 +179,7 @@ static void seiteTempBio() {
   const NextDaten& d = daten;
   if (d.wetterOk) {
     zahl(b, sizeof(b), d.temp, 0, " °C"); setText(objects.labeltemp, b);
+    lv_obj_set_style_text_color(objects.labeltemp, tempFarbe(d.temp, s_dunkel), 0);
     char g[16]; zahl(g, sizeof(g), d.gefuehlt, 0, " °C");
     snprintf(b, sizeof(b), "%s, gefühlt %s", d.text, g); setText(objects.labelwettertext, b);
     char lo[12], hi[12]; zahl(lo, sizeof(lo), d.tmin, 0, "°"); zahl(hi, sizeof(hi), d.tmax, 0, "°");
@@ -274,7 +276,7 @@ static void seitePollenVor() {
   for (int i = 0; i < 4; i++) {
     const bool da = d.vorOk && d.vor[i].zeit[0];
     if (da) {
-      setText(*vorZeit[i], d.vor[i].zeit); zahl(b, sizeof(b), d.vor[i].temp, 0, " °C"); setText(*vorTemp[i], b);
+      setText(*vorZeit[i], d.vor[i].zeit); zahl(b, sizeof(b), d.vor[i].temp, 0, " °C"); setText(*vorTemp[i], b); lv_obj_set_style_text_color(*vorTemp[i], tempFarbe(d.vor[i].temp, s_dunkel), 0);
       const lv_img_dsc_t* ic = wmoZuImage(d.vor[i].wmo, d.vor[i].tag, true);
       if (ic && lv_img_get_src(*vorBild[i]) != ic) lv_img_set_src(*vorBild[i], ic);
       lv_obj_clear_flag(*vorBild[i], LV_OBJ_FLAG_HIDDEN);
@@ -404,7 +406,7 @@ void uiFortschritt(int prozent) {
 // ── Nachtmodus ───────────────────────────────────────────────────────────────
 // Tag: helles Design. Nacht: "Display aus" (Antippen schaltet kurz an) oder "dunkel und gedimmt". Die Quelle der Nacht ist die Fusion
 // (nach deren Einstellungen) oder eigene Zeiten.
-static bool s_nacht = false, s_dunkel = false;
+static bool s_nacht = false;
 static int  s_licht = -1;                // zuletzt gesetzte Helligkeit (-1 = noch keine)
 static unsigned long s_wachBis = 0;      // bis dahin zeigt ein Antippen in der Nacht das Display
 
