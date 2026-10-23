@@ -54,6 +54,10 @@
 | **[Wiki](https://wiki.wettercube.de/index.php/Next/Start)** | Inbetriebnahme, Anbindung an die Fusion, Einstellungen, Updates, Fehlersuche, Entwicklung |
 | **[Änderungsverlauf](CHANGELOG.md)** | was in welcher Version neu ist |
 
+## 📡 Datenquellen
+
+Die Daten holt der Next vom [WetterCube Fusion](https://github.com/JPPeterson-lab/WetterCube-Fusion). Dieser bezieht sie von [Open-Meteo.com](https://open-meteo.com) (CC BY 4.0; die kostenlose Schnittstelle ist nur für nicht-kommerzielle Nutzung gedacht, Pollen und Luftqualität aus dem Copernicus-Dienst CAMS) und vom [Deutschen Wetterdienst](https://opendata.dwd.de) (CC BY 4.0, „Quelle: Deutscher Wetterdienst“). Einzelheiten und Lizenzen: [CREDITS.md](CREDITS.md).
+
 ## 🙏 Credits und Lizenz
 
 <p align="center">
@@ -123,6 +127,10 @@ Du darfst den Quellcode nutzen, verändern und weitergeben, auch kommerziell; di
 | **[wettercube.de](https://wettercube.de/en/products/wettercube-next/)** | overview, [comparison of the cubes](https://wettercube.de/en/comparison/), [roadmap](https://wettercube.de/en/roadmap/), [build guide](https://wettercube.de/en/build-guide/) |
 | **[Wiki](https://wiki.wettercube.de/index.php/Next/Start)** | getting started, connection to the Fusion, settings, updates, troubleshooting, development |
 | **[Changelog](CHANGELOG.en.md)** | what is new in which version |
+
+## 📡 Data sources
+
+Next gets its data from the [WetterCube Fusion](https://github.com/JPPeterson-lab/WetterCube-Fusion), which takes it from [Open-Meteo.com](https://open-meteo.com) (CC BY 4.0; the free interface is for non-commercial use only, pollen and air quality from the Copernicus service CAMS) and from the [German Weather Service](https://opendata.dwd.de) (CC BY 4.0, "Quelle: Deutscher Wetterdienst"). Details and licences: [CREDITS.md](CREDITS.md).
 
 ## 🙏 Credits and licence
 
