@@ -1,6 +1,6 @@
 # Changelog
 
-*[Deutsche Version](CHANGELOG.md)* · Module for the [WetterCube Fusion](https://github.com/JPPeterson-lab/WetterCube-Next)
+*[Deutsche Version](CHANGELOG.md)* · Module for the [WetterCube Fusion](https://github.com/JPPeterson-lab/WetterCube-Fusion)
 
 ## v0.2.0-alpha3 (2026-10-22)
 

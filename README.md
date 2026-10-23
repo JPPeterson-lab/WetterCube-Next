@@ -15,7 +15,7 @@
 
 *[English version below](#english)*
 
-**WetterCube Next** ist ein **zusätzliches Modul zur [WetterCube Fusion](https://github.com/JPPeterson-lab/WetterCube-Next)**: Ein kleiner **ESP32 CYD** („Cheap Yellow Display“, 2,8", 320×240, ESP32-2432S028) zeigt Daten der Fusion an. So bekommt jeder Raum seine eigene Anzeige, im Büro zum Beispiel Temperatur und Biowetter, im Schlafzimmer Allergene und Vorhersage. Der Next findet die Fusion im Heimnetz von selbst, braucht **keinen MQTT-Broker und keine Cloud** und läuft nur zusammen mit einer **Fusion ab v0.9.9-alpha6**. Er ist noch in einer frühen Alpha-Phase.
+**WetterCube Next** ist ein **zusätzliches Modul zur [WetterCube Fusion](https://github.com/JPPeterson-lab/WetterCube-Fusion)**: Ein kleiner **ESP32 CYD** („Cheap Yellow Display“, 2,8", 320×240, ESP32-2432S028) zeigt Daten der Fusion an. So bekommt jeder Raum seine eigene Anzeige, im Büro zum Beispiel Temperatur und Biowetter, im Schlafzimmer Allergene und Vorhersage. Der Next findet die Fusion im Heimnetz von selbst, braucht **keinen MQTT-Broker und keine Cloud** und läuft nur zusammen mit einer **Fusion ab v0.9.9-alpha6**. Er ist noch in einer frühen Alpha-Phase.
 
 > **🔓 Open Source (Apache 2.0):** Quellcode, Web-Installer und Firmware liegen in diesem Repository. Texte und Bilder: CC BY-NC 4.0, Bestandteile Dritter: [CREDITS.md](CREDITS.md), Name und Logos sind nicht freigegeben ([NOTICE](NOTICE)).
 >
@@ -85,7 +85,7 @@ Du darfst den Quellcode nutzen, verändern und weitergeben, auch kommerziell; di
 
 # WetterCube Next (English)
 
-**WetterCube Next** is an **additional module for the [WetterCube Fusion](https://github.com/JPPeterson-lab/WetterCube-Next)**: a small **ESP32 CYD** ("Cheap Yellow Display", 2.8", 320×240, ESP32-2432S028) shows data from the Fusion, so every room gets its own display, for example temperature and Biowetter in the office, allergens and forecast in the bedroom. Next finds the Fusion on your home network by itself, needs **no MQTT broker and no cloud**, and only runs together with a **Fusion from v0.9.9-alpha6**. It is still in an early alpha phase.
+**WetterCube Next** is an **additional module for the [WetterCube Fusion](https://github.com/JPPeterson-lab/WetterCube-Fusion)**: a small **ESP32 CYD** ("Cheap Yellow Display", 2.8", 320×240, ESP32-2432S028) shows data from the Fusion, so every room gets its own display, for example temperature and Biowetter in the office, allergens and forecast in the bedroom. Next finds the Fusion on your home network by itself, needs **no MQTT broker and no cloud**, and only runs together with a **Fusion from v0.9.9-alpha6**. It is still in an early alpha phase.
 
 > **🔓 Open source (Apache 2.0):** source code, web installer and firmware are in this repository. Texts and images: CC BY-NC 4.0, third-party components: [CREDITS.md](CREDITS.md), name and logos are not licensed ([NOTICE](NOTICE)).
 >
