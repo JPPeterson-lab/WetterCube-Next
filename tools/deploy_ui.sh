@@ -1,4 +1,5 @@
 #!/bin/bash
+sedi() { if sed --version >/dev/null 2>&1; then sed -i "$@"; else sed -i '' "$@"; fi; }   # GNU- und BSD-sed (Linux/WSL und macOS)
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2026 Jan Althaus (JPPeterson-lab)
 # PicoPixel-Export fuer WetterCube Next vorbereiten (Exportziel: src/ui/, der Build uebersetzt src/ rekursiv)
@@ -7,7 +8,7 @@ SRC="$(cd "$(dirname "$0")/.." && pwd)/src/ui"
 
 # PicoPixel generiert "lvgl/lvgl.h" - hier heisst der Header <lvgl.h>
 find "$SRC" -name "*.c" -o -name "*.h" | while read f; do
-  if grep -q '"lvgl/lvgl.h"' "$f"; then sed -i '' 's|#include "lvgl/lvgl.h"|#include <lvgl.h>|g' "$f"; echo "  lvgl-Include gepatcht: $(basename "$f")"; fi
+  if grep -q '"lvgl/lvgl.h"' "$f"; then sedi 's|#include "lvgl/lvgl.h"|#include <lvgl.h>|g' "$f"; echo "  lvgl-Include gepatcht: $(basename "$f")"; fi
 done
 
 # images/*.c werden von images.c per #include eingebunden UND vom Build direkt kompiliert -> doppelte Definitionen: zu .inc umbenennen
@@ -17,13 +18,13 @@ if [ -d "$SRC/images" ]; then
     mv "$f" "${f%.c}.inc"; echo "  Image umbenannt: $(basename "$f")"
   done
   if [ -f "$SRC/images.c" ]; then
-    sed -i '' 's|#include "images/\(.*\)\.c"|#include "src/ui/images/\1.inc"|g' "$SRC/images.c"
-    sed -i '' 's|#include "images/\(.*\)\.inc"|#include "src/ui/images/\1.inc"|g' "$SRC/images.c"
+    sedi 's|#include "images/\(.*\)\.c"|#include "src/ui/images/\1.inc"|g' "$SRC/images.c"
+    sedi 's|#include "images/\(.*\)\.inc"|#include "src/ui/images/\1.inc"|g' "$SRC/images.c"
   fi
 fi
 
 # ui.c: FADE_IN-Animation -> NONE (kein Ueberblenden, spart RAM)
-[ -f "$SRC/ui.c" ] && sed -i '' 's|lv_scr_load_anim(screen, LV_SCR_LOAD_ANIM_FADE_IN, 200, 0, false)|lv_scr_load_anim(screen, LV_SCR_LOAD_ANIM_NONE, 0, 0, false)|g' "$SRC/ui.c"
+[ -f "$SRC/ui.c" ] && sedi 's|lv_scr_load_anim(screen, LV_SCR_LOAD_ANIM_FADE_IN, 200, 0, false)|lv_scr_load_anim(screen, LV_SCR_LOAD_ANIM_NONE, 0, 0, false)|g' "$SRC/ui.c"
 
 echo "Verifikation screens.h - erwartete Objekte:"
 EXPECTED=(screenboot screentempbio screenpollenvor labelwetter labelcube labelstatus barwifi
