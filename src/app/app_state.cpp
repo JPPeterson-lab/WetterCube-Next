@@ -35,6 +35,7 @@ void ladeCfg() {
   cfg.drehen = p.getBool("drehen", false);
   cfg.invert = p.getBool("invert", false);
   cfg.raeume = p.getString("raeume", "");
+  cfg.unten = p.getInt("unten", 0); if (cfg.unten < 0 || cfg.unten > 2) cfg.unten = 0;
   cfg.autoUpdate = p.getBool("autoupd", false);
   cfg.web_pw = p.getString("webpw", "");
   cfg.nachtQuelle = p.getInt("nq", 0); if (cfg.nachtQuelle < 0 || cfg.nachtQuelle > 2) cfg.nachtQuelle = 0;
@@ -53,7 +54,7 @@ void speichereCfg() {
   p.putString("fusion", cfg.fusion_host);
   p.putInt("seiten", cfg.seiten); p.putInt("wechsel", cfg.wechsel_sek);
   p.putInt("hell", cfg.helligkeit); p.putInt("panel", cfg.panel);
-  p.putBool("drehen", cfg.drehen); p.putBool("invert", cfg.invert); p.putString("raeume", cfg.raeume); p.putBool("autoupd", cfg.autoUpdate); p.putString("webpw", cfg.web_pw);
+  p.putBool("drehen", cfg.drehen); p.putBool("invert", cfg.invert); p.putString("raeume", cfg.raeume); p.putInt("unten", cfg.unten); p.putBool("autoupd", cfg.autoUpdate); p.putString("webpw", cfg.web_pw);
   p.putInt("nq", cfg.nachtQuelle); p.putInt("nvon", cfg.nachtVon); p.putInt("nbis", cfg.nachtBis);
   p.putInt("nverh", cfg.nachtVerhalten); p.putInt("nhell", cfg.nachtHell); p.putInt("nwach", cfg.nachtWach); p.putBool("verw", cfg.verwaltet);
   p.end();

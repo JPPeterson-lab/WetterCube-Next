@@ -97,6 +97,14 @@ static String kreuz(const char* name, bool an, const char* text) {
   return String("<div class=\"z\"><input type=\"checkbox\" name=\"") + name + "\" value=\"1\"" + (an ? " checked" : "") + "><span>" + text + "</span></div>";
 }
 
+// Untere Haelfte der ersten Seite: Raeume und Biowetter nebeneinander oder nur eines davon ueber die ganze Breite (gilt auch, wenn der Fusion das Geraet verwaltet)
+static String untenKarte() {
+  auto opt = [](int v, const char* t) { return String("<option value=\"") + v + "\"" + (cfg.unten == v ? " selected" : "") + ">" + t + "</option>"; };
+  return String("<div class=\"k\"><b>Erste Seite, unten</b><div class=\"s\" style=\"margin-top:8px\">Was zeigt die untere Hälfte? Allein belegt eine Kachel die ganze Breite, die Namen werden nicht mehr abgeschnitten.</div>"
+                "<input type=\"hidden\" name=\"unten_form\" value=\"1\"><select name=\"unten\">")
+         + opt(0, "Räume und Biowetter nebeneinander") + opt(1, "Nur Räume") + opt(2, "Nur Biowetter") + "</select></div>";
+}
+
 // Nachtmodus: wann ist Nacht (Fusion oder eigene Zeiten) und was passiert
 static String zeitFeld(const char* name, int min) {
   char b[8]; snprintf(b, sizeof(b), "%02d:%02d", (min / 60) % 24, min % 60);
@@ -169,8 +177,9 @@ static void einstellungen() {
   String h = "<h1>WetterCube <span>Next</span></h1><p class=\"s\">Version " FIRMWARE_VERSION " · " + WiFi.localIP().toString() +
              " · Fusion: " + (fusionAdresse.length() ? fusionAdresse : String("wird gesucht")) + "</p>"
              "<form method=\"POST\" action=\"/speichern\">";
+  if (!(cfg.verwaltet && daten.untenVomFusion)) h += untenKarte();
   if (cfg.verwaltet) {
-    h += "<div class=\"k\"><b>Vom Fusion verwaltet</b><div class=\"s\" style=\"margin-top:8px\">Seiten, Räume, Helligkeit, Weiterblättern und Nachtmodus dieses Displays stellst du in der Oberfläche des Fusion ein: "
+    h += "<div class=\"k\"><b>Vom Fusion verwaltet</b><div class=\"s\" style=\"margin-top:8px\">Seiten, Räume, Helligkeit, Weiterblättern, Nachtmodus und die Auswahl unten auf der ersten Seite dieses Displays stellst du in der Oberfläche des Fusion ein: "
          "<a href=\"http://" + (fusionAdresse.length() ? fusionAdresse : String("wettercube-next.local")) + "/next\">wettercube-next.local</a>, Reiter dieses Geräts. Dort lässt sich „Vom Fusion verwalten“ auch wieder ausschalten.</div></div>";
   } else {
     h += "<div class=\"k\"><b>Anzeige</b>"
@@ -223,6 +232,7 @@ static void speichern() {
     cfg.raeume = liste;
   }
   }
+  if (server.hasArg("unten_form")) cfg.unten = constrain(server.arg("unten").toInt(), 0, 2);
   cfg.fusion_host = server.arg("fusion"); cfg.fusion_host.trim();
   cfg.panel = server.arg("panel").toInt() == 1 ? 1 : 0;
   cfg.drehen = server.hasArg("drehen"); cfg.invert = server.hasArg("invert");

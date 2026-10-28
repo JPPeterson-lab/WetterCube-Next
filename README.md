@@ -8,7 +8,7 @@
 <p align="center"><strong>Das kleine Zusatzdisplay zur WetterCube Fusion: ein Display für jeden Raum</strong></p>
 
 ![Status](https://img.shields.io/badge/Status-Beta-yellow?style=flat-square)
-![Version](https://img.shields.io/badge/Version-v0.3.0--beta1-blue?style=flat-square&cacheSeconds=1)
+![Version](https://img.shields.io/badge/Version-v0.3.0--beta2-blue?style=flat-square&cacheSeconds=1)
 ![Hardware](https://img.shields.io/badge/Hardware-ESP32%20CYD%202.8%22-red?style=flat-square&logo=espressif&logoColor=white)
 ![Plattform](https://img.shields.io/badge/Platform-ESP--IDF%205.5-teal?style=flat-square&logo=espressif&logoColor=white)
 ![Lizenz](https://img.shields.io/badge/Lizenz-Apache%202.0-blue?style=flat-square)

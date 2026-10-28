@@ -18,6 +18,7 @@ struct Config {
   int    helligkeit = 80;       // Prozent
   int    panel = 1;             // 0 = ILI9341 mit der Init ILI9341_2 (so lief der CYD im DeskRadar), 1 = ST7789
   bool   drehen = false;        // Anzeige um 180 Grad drehen
+  int    unten = 0;             // erste Seite, untere Haelfte: 0 = Raeume und Biowetter nebeneinander, 1 = nur Raeume, 2 = nur Biowetter (jeweils ueber die ganze Breite)
   String raeume;                // Sensor-IDs der Fusion fuer die Kachel "Raeume" (Komma-Liste, bis 4); leer = die ersten vier
   int    nachtQuelle = 0;       // Nachtmodus: 0 = aus, 1 = wie die Fusion (nach deren Einstellungen), 2 = eigene Zeiten
   int    nachtVon = 22 * 60, nachtBis = 6 * 60 + 30;   // eigene Zeiten (Minuten seit Mitternacht)
@@ -49,6 +50,7 @@ struct NextDaten {
   struct { char zeit[8]; float temp; int wmo; bool tag; char text[28]; } vor[4] = {};
   bool  pollenOk = false;
   struct { char name[16]; bool gewaehlt; float jetzt, heute, morgen, uebermorgen; } pollen[8] = {};
+  bool  untenVomFusion = false;        // die Fusion liefert die Einstellung "Erste Seite, unten" im Block cfg mit
   bool  bioOk = false;
   char  bioName[7][20] = {};
   int   bio[5][7] = {};

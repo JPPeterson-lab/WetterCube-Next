@@ -58,14 +58,16 @@ static void cfgVomFusion(JsonObject c) {
   const int nvon = constrain((int)(c["nvon"] | cfg.nachtVon), 0, 1439), nbis = constrain((int)(c["nbis"] | cfg.nachtBis), 0, 1439);
   const int nverh = constrain((int)(c["nverh"] | cfg.nachtVerhalten), 0, 2);
   const int nhell = constrain((int)(c["nhell"] | cfg.nachtHell), 1, 100), nwach = constrain((int)(c["nwach"] | cfg.nachtWach), 3, 120);
+  const bool hatUnten = c["unten"].is<int>();
+  const int unten = hatUnten ? constrain((int)c["unten"], 0, 2) : cfg.unten;
   String r = c["r"] | "";
   if (r.length() > 200) r = r.substring(0, 200);
   const bool gleich = cfg.verwaltet && seiten == cfg.seiten && wechsel == cfg.wechsel_sek && hell == cfg.helligkeit && nq == cfg.nachtQuelle &&
-                      nvon == cfg.nachtVon && nbis == cfg.nachtBis && nverh == cfg.nachtVerhalten && nhell == cfg.nachtHell && nwach == cfg.nachtWach && r == cfg.raeume;
+                      nvon == cfg.nachtVon && nbis == cfg.nachtBis && nverh == cfg.nachtVerhalten && nhell == cfg.nachtHell && nwach == cfg.nachtWach && r == cfg.raeume && unten == cfg.unten && hatUnten == daten.untenVomFusion;
   if (gleich) return;
   if (seiten != cfg.seiten) s_seitenGeaendert = true;
   cfg.verwaltet = true; cfg.seiten = seiten; cfg.wechsel_sek = wechsel; cfg.helligkeit = hell; cfg.nachtQuelle = nq; cfg.nachtVon = nvon; cfg.nachtBis = nbis;
-  cfg.nachtVerhalten = nverh; cfg.nachtHell = nhell; cfg.nachtWach = nwach; cfg.raeume = r;
+  cfg.nachtVerhalten = nverh; cfg.nachtHell = nhell; cfg.nachtWach = nwach; cfg.raeume = r; cfg.unten = unten; daten.untenVomFusion = hatUnten;
   speichereCfg();
   logDiag("[Fusion] Einstellungen vom Fusion uebernommen");
 }
@@ -78,7 +80,8 @@ static bool auswerten(const char* json) {
   d.nachtOk = doc["nacht"].is<bool>(); d.nacht = doc["nacht"] | false;
   JsonObject cf = doc["cfg"];
   if (!cf.isNull()) cfgVomFusion(cf);
-  else if (cfg.verwaltet) { cfg.verwaltet = false; speichereCfg(); logDiag("[Fusion] Der Fusion verwaltet dieses Geraet nicht mehr, die eigenen Einstellungen gelten wieder"); }
+  else if (cfg.verwaltet) { cfg.verwaltet = false; daten.untenVomFusion = false; speichereCfg(); logDiag("[Fusion] Der Fusion verwaltet dieses Geraet nicht mehr, die eigenen Einstellungen gelten wieder"); }
+  d.untenVomFusion = daten.untenVomFusion;                // cfgVomFusion hat es in "daten" gesetzt, die Kopie d wird gleich zurueckgeschrieben
   JsonObject w = doc["wetter"];
   if (!w.isNull()) {
     d.wetterOk = true;
@@ -154,7 +157,7 @@ static bool abrufen() {
   String url = String("http://") + fusionAdresse + "/api/next?b=" + bloeckeFuerSeiten();
   // Das Geraet meldet sich beim Fusion mit Kennung, Version und aktuellen Einstellungen (so legt der Fusion den Reiter an)
   url += String("&id=") + geraetId + "&ip=" + WiFi.localIP().toString() + "&nv=" + FIRMWARE_VERSION + "&c=" + cfg.seiten + "," + cfg.wechsel_sek + "," + cfg.helligkeit + "," + cfg.nachtQuelle + "," +
-         cfg.nachtVon + "," + cfg.nachtBis + "," + cfg.nachtVerhalten + "," + cfg.nachtHell + "," + cfg.nachtWach + "&r=" + urlKodiert(cfg.raeume);
+         cfg.nachtVon + "," + cfg.nachtBis + "," + cfg.nachtVerhalten + "," + cfg.nachtHell + "," + cfg.nachtWach + "&r=" + urlKodiert(cfg.raeume) + "&u=" + cfg.unten;
   if (s_etag.length()) url += String("&e=") + s_etag;
   HTTPClient http;
   if (!http.begin(url)) return false;

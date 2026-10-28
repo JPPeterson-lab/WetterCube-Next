@@ -2,10 +2,7 @@
 
 *[English version](CHANGELOG.en.md)* · Modul zur [WetterCube Fusion](https://github.com/JPPeterson-lab/WetterCube-Fusion)
 
-## v0.3.0-beta1 (2026-10-23)
+## v0.3.0-beta2 (2026-10-28)
 
-### Behoben
-- **Temperaturfarbe:** Die Temperatur war immer grün, auch bei 6 Grad. Jetzt wechselt die Farbe wie beim Fusion: unter 8 Grad blau, unter 15 grün, unter 24 gelb, darüber rot. Das gilt für die aktuelle Temperatur und für die Werte der Vorhersage, im hellen wie im dunklen Design.
-
-### Geändert
-- **Status:** Der Next ist jetzt in der Beta-Phase.
+### Neu
+- **Erste Seite, unten wählbar:** Räume und Biowetter nebeneinander (wie bisher), nur Räume oder nur Biowetter. Eine einzelne Kachel nutzt die ganze Breite, die Namen werden nicht mehr abgeschnitten. Einstellung auf der eigenen Seite des Next („Erste Seite, unten“). Ein Fusion ab v1.0.0-rc2 und der Apex (neuere Version) zeigen die Auswahl auch im Reiter dieses Next und steuern sie, wenn sie das Gerät verwalten; mit einem älteren Fusion gilt die Einstellung am Next.

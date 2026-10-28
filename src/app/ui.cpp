@@ -67,6 +67,7 @@ static void zeileAnpassen(lv_obj_t* name, lv_obj_t* wert, const char* text, int 
 }
 
 static Zeile zSens[4], zBio[4], zPollen[8];
+static int s_untenBreite = 150;          // Breite der Kachel Raeume bzw. Biowetter (150 nebeneinander, 304 allein)
 static lv_obj_t** vorZeit[4];
 static lv_obj_t** vorTemp[4];
 static bool s_dunkel = false;   // dunkles Design (Nacht) aktiv
@@ -174,9 +175,27 @@ void uiInit() {
 }
 
 // ── Inhalt ───────────────────────────────────────────────────────────────────
+// Untere Haelfte der ersten Seite: beide Kacheln nebeneinander oder nur eine ueber die ganze Breite (cfg.unten)
+static void untenAnwenden() {
+  static int zuletzt = -1;
+  if (zuletzt == cfg.unten) return;
+  zuletzt = cfg.unten;
+  const bool beide = cfg.unten == 0, raeume = cfg.unten != 2, bio = cfg.unten != 1;
+  s_untenBreite = beide ? 150 : 304;
+  lv_obj_set_pos(objects.kachelsensoren, 8, 92); lv_obj_set_size(objects.kachelsensoren, s_untenBreite, 140);
+  lv_obj_set_pos(objects.kachelbio, beide ? 162 : 8, 92); lv_obj_set_size(objects.kachelbio, s_untenBreite, 140);
+  if (raeume) lv_obj_clear_flag(objects.kachelsensoren, LV_OBJ_FLAG_HIDDEN); else lv_obj_add_flag(objects.kachelsensoren, LV_OBJ_FLAG_HIDDEN);
+  if (bio) lv_obj_clear_flag(objects.kachelbio, LV_OBJ_FLAG_HIDDEN); else lv_obj_add_flag(objects.kachelbio, LV_OBJ_FLAG_HIDDEN);
+  for (int i = 0; i < 4; i++) {
+    feld(*zSens[i].name, 8, beide ? 88 : 150, 22, false); feld(*zSens[i].wert, beide ? 92 : 170, beide ? 54 : 126, 22, true);
+    feld(*zBio[i].name, 8, beide ? 94 : 160, 22, false); feld(*zBio[i].wert, beide ? 100 : 170, beide ? 46 : 126, 22, true);
+  }
+}
+
 static void seiteTempBio() {
   char b[48];
   const NextDaten& d = daten;
+  untenAnwenden();
   if (d.wetterOk) {
     zahl(b, sizeof(b), d.temp, 0, " °C"); setText(objects.labeltemp, b);
     lv_obj_set_style_text_color(objects.labeltemp, tempFarbe(d.temp, s_dunkel), 0);
@@ -213,7 +232,7 @@ static void seiteTempBio() {
       setText(n, bez);
       if (s.ok) { char e[16]; snprintf(e, sizeof(e), s.einheit[0] ? " %s" : "", s.einheit); zahl(b, sizeof(b), s.wert, 1, e); setText(w, b); }
       else setText(w, "--");
-      zeileAnpassen(n, w, s.ok ? b : "--", 150);
+      zeileAnpassen(n, w, s.ok ? b : "--", s_untenBreite);
       lv_obj_clear_flag(n, LV_OBJ_FLAG_HIDDEN); lv_obj_clear_flag(w, LV_OBJ_FLAG_HIDDEN);
     } else if (i == 0) {
       setText(n, "keine Sensoren"); setText(w, ""); lv_obj_clear_flag(n, LV_OBJ_FLAG_HIDDEN);
