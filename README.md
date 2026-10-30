@@ -52,6 +52,7 @@
 |---|---|
 | **[wettercube.de](https://wettercube.de/projekte/wettercube-next/)** | Überblick, [Vergleich der Cubes](https://wettercube.de/vergleich/), [Roadmap](https://wettercube.de/roadmap/), [Bauanleitung](https://wettercube.de/bauanleitung/) |
 | **[Wiki](https://wiki.wettercube.de/index.php/Next/Start)** | Inbetriebnahme, Anbindung an die Fusion, Einstellungen, Updates, Fehlersuche, Entwicklung |
+| **[draussenwetter.de](https://draussenwetter.de/)** | Pollenflug und Biowetter für deinen Ort als Webseite, ohne Display |
 | **[Änderungsverlauf](CHANGELOG.md)** | was in welcher Version neu ist |
 
 ## 📡 Datenquellen
@@ -126,6 +127,7 @@ Du darfst den Quellcode nutzen, verändern und weitergeben, auch kommerziell; di
 |---|---|
 | **[wettercube.de](https://wettercube.de/en/products/wettercube-next/)** | overview, [comparison of the cubes](https://wettercube.de/en/comparison/), [roadmap](https://wettercube.de/en/roadmap/), [build guide](https://wettercube.de/en/build-guide/) |
 | **[Wiki](https://wiki.wettercube.de/index.php/Next/Start)** | getting started, connection to the Fusion, settings, updates, troubleshooting, development |
+| **[draussenwetter.de](https://draussenwetter.de/)** | pollen and bio-weather for your location as a website, no display needed (German) |
 | **[Changelog](CHANGELOG.en.md)** | what is new in which version |
 
 ## 📡 Data sources
