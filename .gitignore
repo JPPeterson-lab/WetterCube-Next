@@ -1,0 +1,11 @@
+.DS_Store
+*.bak
+build/
+managed_components/
+dependencies.lock
+sdkconfig
+sdkconfig.old
+releases-elf/
+# macOS/iCloud-Duplikate ("datei 2.cpp")
+src/*/*[[:space:]][0-9].*
+sdkconfig[[:space:]][0-9]*
